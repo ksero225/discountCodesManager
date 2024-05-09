@@ -7,21 +7,20 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PromoCodeMapper implements Mapper<PromoCodeDto, PromoCodeEntity> {
+public class PromoCodeMapper implements Mapper<PromoCodeEntity, PromoCodeDto> {
     private final ModelMapper modelMapper;
 
     public PromoCodeMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 
-
     @Override
-    public PromoCodeEntity mapTo(PromoCodeDto promoCodeDto) {
-        return modelMapper.map(promoCodeDto, PromoCodeEntity.class);
+    public PromoCodeDto mapTo(PromoCodeEntity promoCodeEntity) {
+        return modelMapper.map(promoCodeEntity, PromoCodeDto.class);
     }
 
     @Override
-    public PromoCodeDto mapFrom(PromoCodeEntity promoCodeEntity) {
-        return modelMapper.map(promoCodeEntity, PromoCodeDto.class);
+    public PromoCodeEntity mapFrom(PromoCodeDto promoCodeDto) {
+        return modelMapper.map(promoCodeDto, PromoCodeEntity.class);
     }
 }

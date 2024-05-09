@@ -7,7 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductMapper implements Mapper<ProductDto, ProductEntity> {
+public class ProductMapper implements Mapper<ProductEntity, ProductDto> {
 
     private final ModelMapper modelMapper;
 
@@ -16,12 +16,12 @@ public class ProductMapper implements Mapper<ProductDto, ProductEntity> {
     }
 
     @Override
-    public ProductEntity mapTo(ProductDto productDto) {
-        return modelMapper.map(productDto, ProductEntity.class);
+    public ProductDto mapTo(ProductEntity productEntity) {
+        return modelMapper.map(productEntity, ProductDto.class);
     }
 
     @Override
-    public ProductDto mapFrom(ProductEntity productEntity) {
-        return modelMapper.map(productEntity, ProductDto.class);
+    public ProductEntity mapFrom(ProductDto productDto) {
+        return modelMapper.map(productDto, ProductEntity.class);
     }
 }
