@@ -27,6 +27,4 @@ public class ProductEntity {
     private BigDecimal productPrice;
     private String productCurrency;
 
-    @OneToMany(mappedBy = "promoCodeProduct", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<PromoCodeEntity> productPromoCodes = new HashSet<>();
 }

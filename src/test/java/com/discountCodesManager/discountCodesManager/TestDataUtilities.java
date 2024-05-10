@@ -16,7 +16,6 @@ public class TestDataUtilities {
                 .productDescription("Plank with keys")
                 .productPrice(BigDecimal.valueOf(11.11))
                 .productCurrency("EUR")
-                .productPromoCodes(new HashSet<>())
                 .build();
     }
 
@@ -27,7 +26,6 @@ public class TestDataUtilities {
                 .productDescription("Gaming mouse")
                 .productPrice(BigDecimal.valueOf(22.22))
                 .productCurrency("PLN")
-                .productPromoCodes(new HashSet<>())
                 .build();
     }
 
@@ -38,7 +36,6 @@ public class TestDataUtilities {
                 .productDescription("It shines")
                 .productPrice(BigDecimal.valueOf(33.33))
                 .productCurrency("USD")
-                .productPromoCodes(new HashSet<>())
                 .build();
     }
 
@@ -50,7 +47,7 @@ public class TestDataUtilities {
                 .promoCodeExpirationDate(promoCodeExpirationDate)
                 .promoCodeCurrency("EUR")
                 .promoCodeDiscountAmount(BigDecimal.valueOf(11.11))
-                .promoCodeProduct(null)
+                .promoCodeAllowedUsagesNumber(100)
                 .build();
     }
 
@@ -62,7 +59,7 @@ public class TestDataUtilities {
                 .promoCodeExpirationDate(promoCodeExpirationDate)
                 .promoCodeCurrency("PLN")
                 .promoCodeDiscountAmount(BigDecimal.valueOf(22.22))
-                .promoCodeProduct(null)
+                .promoCodeAllowedUsagesNumber(200)
                 .build();
     }
 
@@ -74,7 +71,7 @@ public class TestDataUtilities {
                 .promoCodeExpirationDate(promoCodeExpirationDate)
                 .promoCodeCurrency("USD")
                 .promoCodeDiscountAmount(BigDecimal.valueOf(33.33))
-                .promoCodeProduct(null)
+                .promoCodeAllowedUsagesNumber(300)
                 .build();
     }
 }

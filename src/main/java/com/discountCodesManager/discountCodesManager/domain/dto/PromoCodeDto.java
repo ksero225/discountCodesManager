@@ -23,5 +23,6 @@ public class PromoCodeDto {
     private String promoCodeCurrency;
     private BigDecimal promoCodeDiscountAmount;
 
-    private ProductEntity promoCodeProduct;
+    private Integer promoCodeAllowedUsagesNumber;
+
 }

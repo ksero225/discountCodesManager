@@ -24,7 +24,6 @@ public class PromoCodeEntity {
     private String promoCodeCurrency;
     private BigDecimal promoCodeDiscountAmount;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private ProductEntity promoCodeProduct;
+    private Integer promoCodeAllowedUsagesNumber;
+
 }
