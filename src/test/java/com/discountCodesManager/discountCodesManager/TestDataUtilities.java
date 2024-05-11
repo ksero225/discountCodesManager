@@ -43,7 +43,8 @@ public class TestDataUtilities {
         LocalDate promoCodeExpirationDate = LocalDate.of(2025, 1,1);
 
         return PromoCodeEntity.builder()
-            .promoCodeId("promoCodeNumber1")
+                .promoCodeId(1L)
+                .promoCode("11111")
                 .promoCodeExpirationDate(promoCodeExpirationDate)
                 .promoCodeCurrency("EUR")
                 .promoCodeDiscountAmount(BigDecimal.valueOf(11.11))
@@ -55,7 +56,8 @@ public class TestDataUtilities {
         LocalDate promoCodeExpirationDate = LocalDate.of(2025, 2,2);
 
         return PromoCodeEntity.builder()
-                .promoCodeId("promoCodeNumber2")
+                .promoCodeId(2L)
+                .promoCode("22222")
                 .promoCodeExpirationDate(promoCodeExpirationDate)
                 .promoCodeCurrency("PLN")
                 .promoCodeDiscountAmount(BigDecimal.valueOf(22.22))
@@ -67,7 +69,8 @@ public class TestDataUtilities {
         LocalDate promoCodeExpirationDate = LocalDate.of(2025, 3,3);
 
         return PromoCodeEntity.builder()
-                .promoCodeId("promoCodeNumber3")
+                .promoCodeId(3L)
+                .promoCode("33333")
                 .promoCodeExpirationDate(promoCodeExpirationDate)
                 .promoCodeCurrency("USD")
                 .promoCodeDiscountAmount(BigDecimal.valueOf(33.33))

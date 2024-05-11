@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface ProductService {
     ProductEntity save(ProductEntity productEntity);
 
-    boolean doesProductExists(Long productId);
+    //boolean doesProductExists(Long productId);
 
     Optional<ProductEntity> findOne(Long productId);
 

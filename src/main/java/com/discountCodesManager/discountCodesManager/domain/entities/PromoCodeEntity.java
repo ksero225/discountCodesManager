@@ -17,7 +17,11 @@ import java.time.LocalDate;
 @Table(name = "promo_codes")
 public class PromoCodeEntity {
     @Id
-    private String promoCodeId; // 3-24 alphanumeric case-sensitive characters with no whitespaces
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long promoCodeId;// 3-24 alphanumeric case-sensitive characters with no whitespaces
+
+    @Column(name = "promoCode")
+    private String promoCode;
 
     private LocalDate promoCodeExpirationDate;
 

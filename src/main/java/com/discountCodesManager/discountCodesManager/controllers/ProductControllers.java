@@ -27,7 +27,7 @@ public class ProductControllers {
 
     //TODO: ADD VALIDATION FOR PRODUCTS (for example if passed price is below 0)
     @PostMapping(path = "/product")
-    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto){
+    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
         ProductEntity productEntity = productMapper.mapFrom(productDto);
 
         ProductEntity savedProductEntity = productService.save(productEntity);
@@ -39,7 +39,7 @@ public class ProductControllers {
     }
 
     @GetMapping(path = "/product/{productId}")
-    public ResponseEntity<ProductDto> getOneProductById(@PathVariable("productId") Long productId){
+    public ResponseEntity<ProductDto> getOneProductById(@PathVariable("productId") Long productId) {
         Optional<ProductEntity> foundProduct = productService.findOne(productId);
 
         return foundProduct.map(ProductEntity -> {
@@ -51,7 +51,7 @@ public class ProductControllers {
     }
 
     @GetMapping(path = "/product")
-    public Page<ProductDto> getAllProducts(Pageable pageable){
+    public Page<ProductDto> getAllProducts(Pageable pageable) {
         Page<ProductEntity> allFoundProducts = productService.findAll(pageable);
 
         return allFoundProducts.map(productMapper::mapTo);
@@ -63,7 +63,7 @@ public class ProductControllers {
     public ResponseEntity<ProductDto> fullUpdateProduct(
             @PathVariable("productId") Long productId,
             @RequestBody ProductDto productDto
-    ){
+    ) {
 
         checkProductExistence(productId);
         productDto.setProductId(productId);
@@ -77,7 +77,7 @@ public class ProductControllers {
     public ResponseEntity<ProductDto> partialUpdateProduct(
             @PathVariable("productId") Long productId,
             @RequestBody ProductDto productDto
-    ){
+    ) {
         checkProductExistence(productId);
 
         ProductEntity productEntity = productMapper.mapFrom(productDto);
@@ -87,16 +87,16 @@ public class ProductControllers {
     }
 
     @DeleteMapping(path = "/product/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable("productId") Long productId){
+    public ResponseEntity<Void> deleteProduct(@PathVariable("productId") Long productId) {
         checkProductExistence(productId);
 
         productService.deleteById(productId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    private void checkProductExistence(Long productId){
-        if (!productService.doesProductExists(productId)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+    private void checkProductExistence(Long productId) {
+        if (productService.findOne(productId).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found.");
         }
     }
 }

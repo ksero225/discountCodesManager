@@ -15,7 +15,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class PromoCodeDto {
-    private String promoCodeId;
+    private Long promoCodeId;
+    private String promoCode;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate promoCodeExpirationDate;
