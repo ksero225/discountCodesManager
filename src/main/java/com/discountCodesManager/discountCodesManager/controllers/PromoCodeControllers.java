@@ -47,9 +47,9 @@ public class PromoCodeControllers {
         );
     }
 
-    @GetMapping(path = "/promoCode/{promoCodeId}")
-    public ResponseEntity<PromoCodeDto> getPromoCodeById(@PathVariable("promoCodeId") Long promoCodeId) {
-        Optional<PromoCodeEntity> foundPromoCode = promoCodeService.findOne(promoCodeId);
+    @GetMapping(path = "/promoCode/{promoCode}")
+    public ResponseEntity<PromoCodeDto> getPromoCodeById(@PathVariable("promoCode") String promoCode) {
+        Optional<PromoCodeEntity> foundPromoCode = promoCodeService.findOne(promoCode);
 
         return foundPromoCode.map(PromoCodeEntity -> {
             PromoCodeDto promoCodeDto = promoCodeMapper.mapTo(PromoCodeEntity);
@@ -71,47 +71,47 @@ public class PromoCodeControllers {
         return allFoundPromoCodes.map(promoCodeMapper::mapTo);
     }
 
-    @PutMapping(path = "/promoCode/{promoCodeId}")
+    @PutMapping(path = "/promoCode/{promoCode}")
     public ResponseEntity<PromoCodeDto> fullUpdatePromoCode(
-            @PathVariable("promoCodeId") Long promoCodeId,
+            @PathVariable("promoCode") String promoCode,
             @RequestBody PromoCodeDto promoCodeDto
     ){
 
         //TODO: check if promoCode exist
 
-        checkPromoCodeExistence(promoCodeId);
+        checkPromoCodeExistence(promoCode);
 
-        promoCodeDto.setPromoCodeId(promoCodeId);
+        //promoCodeDto.setPromoCode(promoCode);
 
         PromoCodeEntity promoCodeEntity = promoCodeMapper.mapFrom(promoCodeDto);
-        PromoCodeEntity savedPromoCodeEntity = promoCodeService.save(promoCodeEntity);
+        PromoCodeEntity savedPromoCodeEntity = promoCodeService.updatePromoCode(promoCode, promoCodeEntity);
 
         return new ResponseEntity<>(promoCodeMapper.mapTo(savedPromoCodeEntity),HttpStatus.OK);
     }
 
     @PatchMapping(path = "/promoCode/{promoCodeId}")
     public ResponseEntity<PromoCodeDto> partialUpdatePromoCode(
-            @PathVariable("promoCodeId") Long promoCodeId,
+            @PathVariable("promoCodeId") String promoCode,
             @RequestBody PromoCodeDto promoCodeDto
     ){
-        checkPromoCodeExistence(promoCodeId);
+        checkPromoCodeExistence(promoCode);
 
         PromoCodeEntity promoCodeEntity = promoCodeMapper.mapFrom(promoCodeDto);
-        PromoCodeEntity savedPromoCodeentity = promoCodeService.partialUpdate(promoCodeId, promoCodeEntity);
+        PromoCodeEntity savedPromoCodeentity = promoCodeService.updatePromoCode(promoCode, promoCodeEntity);
 
         return new ResponseEntity<>(promoCodeMapper.mapTo(savedPromoCodeentity), HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/promoCode/{promoCodeId}")
-    public ResponseEntity<Void> deletePromoCode(@PathVariable("promoCodeId") Long promoCodeId){
-        checkPromoCodeExistence(promoCodeId);
+    @DeleteMapping(path = "/promoCode/{promoCode}")
+    public ResponseEntity<Void> deletePromoCode(@PathVariable("promoCode") String promoCode){
+        checkPromoCodeExistence(promoCode);
 
-        promoCodeService.deleteById(promoCodeId);
+        promoCodeService.deleteById(promoCode);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    private void checkPromoCodeExistence(Long promoCodeId){
-        if(promoCodeService.findOne(promoCodeId).isEmpty()){
+    private void checkPromoCodeExistence(String promoCode){
+        if(promoCodeService.findOne(promoCode).isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Promo code not found.");
         }
     }

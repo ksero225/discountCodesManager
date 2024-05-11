@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
@@ -25,16 +24,17 @@ public class PromoCodeServiceImpl implements PromoCodeService {
     }
 
     @Override
-    public Optional<PromoCodeEntity> findOne(Long promoCodeId) {
-        return promoCodeRepository.findById(promoCodeId);
+    public Optional<PromoCodeEntity> findOne(String promoCode) {
+        return promoCodeRepository.findPromoCodeEntityByPromoCode(promoCode);
     }
 
     @Override
-    public PromoCodeEntity partialUpdate(Long promoCodeId, PromoCodeEntity promoCodeEntity) {
-        Optional<PromoCodeEntity> foundPromoCode = promoCodeRepository.findById(promoCodeId);
+    public PromoCodeEntity updatePromoCode(String promoCode, PromoCodeEntity promoCodeEntity) {
+        Optional<PromoCodeEntity> foundPromoCode = promoCodeRepository.findPromoCodeEntityByPromoCode(promoCode);
 
         return foundPromoCode.map(existingPromoCode -> {
             Optional.ofNullable(promoCodeEntity.getPromoCodeId()).ifPresent(existingPromoCode::setPromoCodeId);
+            Optional.ofNullable(promoCodeEntity.getPromoCode()).ifPresent(existingPromoCode::setPromoCode);
             Optional.ofNullable(promoCodeEntity.getPromoCodeExpirationDate()).ifPresent(existingPromoCode::setPromoCodeExpirationDate);
             Optional.ofNullable(promoCodeEntity.getPromoCodeCurrency()).ifPresent(existingPromoCode::setPromoCodeCurrency);
             Optional.ofNullable(promoCodeEntity.getPromoCodeDiscountAmount()).ifPresent(existingPromoCode::setPromoCodeDiscountAmount);
@@ -47,8 +47,8 @@ public class PromoCodeServiceImpl implements PromoCodeService {
     }
 
     @Override
-    public void deleteById(Long promoCodeId) {
-        promoCodeRepository.deleteById(promoCodeId);
+    public void deleteById(String promoCode) {
+        promoCodeRepository.deletePromoCodeEntityByPromoCode(promoCode);
     }
 
     @Override

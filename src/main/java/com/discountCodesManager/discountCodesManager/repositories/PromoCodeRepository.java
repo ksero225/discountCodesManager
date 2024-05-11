@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface PromoCodeRepository extends JpaRepository<PromoCodeEntity, Long>, PagingAndSortingRepository<PromoCodeEntity, Long> {
     boolean existsByPromoCode(String promoCode);
+    Optional<PromoCodeEntity> findPromoCodeEntityByPromoCode(String promoCode);
+    void deletePromoCodeEntityByPromoCode (String promoCode);
 }

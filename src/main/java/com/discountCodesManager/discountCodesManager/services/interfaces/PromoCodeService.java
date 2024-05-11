@@ -9,13 +9,13 @@ import java.util.Optional;
 public interface PromoCodeService {
     PromoCodeEntity save(PromoCodeEntity promoCodeEntity);
 
-    Optional<PromoCodeEntity> findOne(Long promoCodeId);
-
     Page<PromoCodeEntity> findAll(Pageable pageable);
 
-    PromoCodeEntity partialUpdate(Long promoCodeId, PromoCodeEntity promoCodeEntity);
+    PromoCodeEntity updatePromoCode(String promoCodeId, PromoCodeEntity promoCodeEntity);
 
-    void deleteById(Long promoCodeId);
+    void deleteById(String promoCodeId);
 
     boolean existByPromoCode(String promoCode);
+
+    Optional<PromoCodeEntity> findOne(String promoCode);
 }
