@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -17,11 +17,14 @@ import java.time.LocalDateTime;
 @Table(name = "purchases_history")
 public class PurchaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long purchaseId;
 
-    private LocalDateTime purchaseDate;
+    private LocalDate purchaseDate;
+    private BigDecimal purchaseProductBasicPrice;
     private BigDecimal purchaseDiscountApplied;
 
-    private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private ProductEntity product;
 }

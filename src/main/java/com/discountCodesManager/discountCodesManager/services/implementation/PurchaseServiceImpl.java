@@ -1,5 +1,6 @@
 package com.discountCodesManager.discountCodesManager.services.implementation;
 
+import com.discountCodesManager.discountCodesManager.domain.entities.PurchaseEntity;
 import com.discountCodesManager.discountCodesManager.repositories.ProductRepository;
 import com.discountCodesManager.discountCodesManager.repositories.PromoCodeRepository;
 import com.discountCodesManager.discountCodesManager.repositories.PurchaseRepository;
@@ -16,5 +17,10 @@ public class PurchaseServiceImpl implements PurchaseService {
         this.productRepository = productRepository;
         this.promoCodeRepository = promoCodeRepository;
         this.purchaseRepository = purchaseRepository;
+    }
+
+    @Override
+    public PurchaseEntity save(PurchaseEntity purchaseEntity) {
+        return purchaseRepository.save(purchaseEntity);
     }
 }
