@@ -1,0 +1,119 @@
+package com.discountCodesManager.discountCodesManager.controllers;
+
+import com.discountCodesManager.discountCodesManager.domain.dto.PurchaseDto;
+import com.discountCodesManager.discountCodesManager.domain.entities.ProductEntity;
+import com.discountCodesManager.discountCodesManager.domain.entities.PromoCodeEntity;
+import com.discountCodesManager.discountCodesManager.domain.entities.PurchaseEntity;
+import com.discountCodesManager.discountCodesManager.mappers.Mapper;
+import com.discountCodesManager.discountCodesManager.services.interfaces.ProductService;
+import com.discountCodesManager.discountCodesManager.services.interfaces.PromoCodeService;
+import com.discountCodesManager.discountCodesManager.services.interfaces.PurchaseService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
+
+@RestController
+public class PurchaseController {
+    private final PurchaseService purchaseService;
+    private final PromoCodeService promoCodeService;
+    private final ProductService productService;
+    private final Mapper<PurchaseEntity, PurchaseDto> purchaseMapper;
+
+    public PurchaseController(
+            PurchaseService purchaseService,
+            PromoCodeService promoCodeService,
+            ProductService productService,
+            Mapper<PurchaseEntity, PurchaseDto> purchaseMapper
+    ) {
+        this.purchaseService = purchaseService;
+        this.promoCodeService = promoCodeService;
+        this.productService = productService;
+        this.purchaseMapper = purchaseMapper;
+    }
+
+    @GetMapping(path = "/discount/{productName}/{promoCode}")
+    public ResponseEntity<String> getDiscountPrice(
+            @PathVariable("productName") String productName,
+            @PathVariable("promoCode") String promoCode
+    ) {
+
+        Optional<PromoCodeEntity> foundPromoCode = promoCodeService.findOne(promoCode);
+        Optional<ProductEntity> foundProduct = productService.findOneByProductName(productName);
+
+        if (foundPromoCode.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Promo code does not exist");
+        }
+
+        if (foundProduct.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product does not exist");
+        }
+
+        LocalDate today = LocalDate.now();
+
+        BigDecimal basePrice = foundProduct.get().getProductPrice();
+        String productCurrency = foundProduct.get().getProductCurrency();
+        String promoCodeCurrency = foundPromoCode.get().getPromoCodeCurrency();
+
+        String message = "";
+
+        if (foundPromoCode.get().getPromoCodeExpirationDate().isBefore(today)) {
+            message = String.format("Promo code is expired, base price is %s %s.",
+                    basePrice,
+                    productCurrency
+            );
+            return ResponseEntity.ok(message);
+        }
+
+        if (!productCurrency.equals(promoCodeCurrency)) {
+            message = String.format("Promo code currency (%s) does not match product currency (%s), base price is %s %s.",
+                    promoCodeCurrency,
+                    productCurrency,
+                    basePrice,
+                    productCurrency
+            );
+            return ResponseEntity.ok(message);
+        }
+
+        final Integer promoCodeUsages = foundPromoCode.get().getPromoCodeAllowedUsagesNumber();
+
+        if (promoCodeUsages <= 0) {
+            message = String.format("The maximum usage limit has been reached for this promo code, base price is %s %s.",
+                    basePrice,
+                    productCurrency
+            );
+            return ResponseEntity.ok(message);
+        }
+
+        final BigDecimal promoCodeDiscountAmount = foundPromoCode.get().getPromoCodeDiscountAmount();
+        final BigDecimal discountedPrice = basePrice.subtract(promoCodeDiscountAmount);
+
+        if (discountedPrice.compareTo(BigDecimal.ZERO) <= 0) {
+            message = String.format("Price of %s with a promo code %s is 0 %s",
+                    productName,
+                    promoCode,
+                    productCurrency
+            );
+
+            return ResponseEntity.ok(message);
+        }
+
+        message = String.format("Price of %s with a promo code %s is %s %s (original price %s)",
+                productName,
+                promoCode,
+                discountedPrice,
+                productCurrency,
+                basePrice
+        );
+
+        return ResponseEntity.ok(message);
+    }
+
+}

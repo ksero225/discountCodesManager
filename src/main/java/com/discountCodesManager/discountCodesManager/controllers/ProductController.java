@@ -14,12 +14,12 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 @RestController
-public class ProductControllers {
+public class ProductController {
 
     private final ProductService productService;
     private final Mapper<ProductEntity, ProductDto> productMapper;
 
-    public ProductControllers(ProductService productService, Mapper<ProductEntity, ProductDto> productMapper) {
+    public ProductController(ProductService productService, Mapper<ProductEntity, ProductDto> productMapper) {
         this.productService = productService;
         this.productMapper = productMapper;
     }

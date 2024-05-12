@@ -30,6 +30,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Optional<ProductEntity> findOneByProductName(String productName) {
+        return productRepository.findByProductName(productName);
+    }
+
+    @Override
     public Page<ProductEntity> findAll(Pageable pageable) {
         return productRepository.findAll(pageable);
     }

@@ -18,4 +18,6 @@ public interface ProductService {
     ProductEntity partialUpdate(Long productId,ProductEntity productEntity);
 
     void deleteById(Long productId);
+
+    Optional<ProductEntity> findOneByProductName(String productName);
 }
