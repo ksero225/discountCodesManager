@@ -1,6 +1,7 @@
 package com.discountCodesManager.discountCodesManager.services.interfaces;
 
 import com.discountCodesManager.discountCodesManager.domain.entities.PromoCodeEntity;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,7 +14,8 @@ public interface PromoCodeService {
 
     PromoCodeEntity updatePromoCode(String promoCodeId, PromoCodeEntity promoCodeEntity);
 
-    void deleteById(String promoCodeId);
+
+    void deleteByPromoCode(String promoCode);
 
     boolean existByPromoCode(String promoCode);
 

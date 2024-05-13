@@ -1,5 +1,7 @@
 package com.discountCodesManager.discountCodesManager;
 
+import com.discountCodesManager.discountCodesManager.domain.dto.ProductDto;
+import com.discountCodesManager.discountCodesManager.domain.dto.PromoCodeDto;
 import com.discountCodesManager.discountCodesManager.domain.entities.ProductEntity;
 import com.discountCodesManager.discountCodesManager.domain.entities.PromoCodeEntity;
 
@@ -11,6 +13,16 @@ public class TestDataUtilities {
 
     public static ProductEntity createTestProductEntityA() {
         return ProductEntity.builder()
+                .productId(1L)
+                .productName("Keyboard")
+                .productDescription("Plank with keys")
+                .productPrice(BigDecimal.valueOf(11.11))
+                .productCurrency("EUR")
+                .build();
+    }
+
+    public static ProductDto createTestProductDtoA() {
+        return ProductDto.builder()
                 .productId(1L)
                 .productName("Keyboard")
                 .productDescription("Plank with keys")
@@ -43,6 +55,19 @@ public class TestDataUtilities {
         LocalDate promoCodeExpirationDate = LocalDate.of(2025, 1,1);
 
         return PromoCodeEntity.builder()
+                .promoCodeId(1L)
+                .promoCode("11111")
+                .promoCodeExpirationDate(promoCodeExpirationDate)
+                .promoCodeCurrency("EUR")
+                .promoCodeDiscountAmount(BigDecimal.valueOf(11.11))
+                .promoCodeAllowedUsagesNumber(100)
+                .build();
+    }
+
+    public static PromoCodeDto createTestPromoCodeDtoA(){
+        LocalDate promoCodeExpirationDate = LocalDate.of(2025, 1,1);
+
+        return PromoCodeDto.builder()
                 .promoCodeId(1L)
                 .promoCode("11111")
                 .promoCodeExpirationDate(promoCodeExpirationDate)

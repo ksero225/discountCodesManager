@@ -44,7 +44,7 @@ public class PromoCodeController {
         if (promoCodeDto.getPromoCodeExpirationDate().isBefore(LocalDate.now())) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "Bad expiration date"
+                    "Wrong expiration date"
             );
         }
 
@@ -56,7 +56,7 @@ public class PromoCodeController {
     }
 
     @GetMapping(path = "/promoCode/{promoCode}")
-    public ResponseEntity<PromoCodeDto> getPromoCodeById(@PathVariable("promoCode") String promoCode) {
+    public ResponseEntity<PromoCodeDto> getOnePromoCode(@PathVariable("promoCode") String promoCode) {
         Optional<PromoCodeEntity> foundPromoCode = promoCodeService.findOne(promoCode);
 
         return foundPromoCode.map(PromoCodeEntity -> {
@@ -110,7 +110,7 @@ public class PromoCodeController {
     public ResponseEntity<Void> deletePromoCode(@PathVariable("promoCode") String promoCode) {
         checkPromoCodeExistence(promoCode);
 
-        promoCodeService.deleteById(promoCode);
+        promoCodeService.deleteByPromoCode(promoCode);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

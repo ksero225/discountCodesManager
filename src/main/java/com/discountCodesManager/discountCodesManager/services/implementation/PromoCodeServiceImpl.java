@@ -47,7 +47,7 @@ public class PromoCodeServiceImpl implements PromoCodeService {
     }
 
     @Override
-    public void deleteById(String promoCode) {
+    public void deleteByPromoCode(String promoCode) {
         promoCodeRepository.deletePromoCodeEntityByPromoCode(promoCode);
     }
 
