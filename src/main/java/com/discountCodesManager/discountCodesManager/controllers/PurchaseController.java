@@ -122,7 +122,7 @@ public class PurchaseController {
         final Integer promoCodeUsages = promoCodeEntity.getPromoCodeAllowedUsagesNumber();
         final String productName = productEntity.getProductName();
         final String promoCode = promoCodeEntity.getPromoCode();
-        String message = "";
+        String message;
 
         if (promoCodeEntity.getPromoCodeExpirationDate().isBefore(today)) {
             message = String.format("Promo code is expired, base price is %s %s.",
