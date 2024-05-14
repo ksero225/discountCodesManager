@@ -1,0 +1,512 @@
+{
+	"info": {
+		"_postman_id": "166ea002-1473-4970-989b-5f291d0b962e",
+		"name": "PromoCode CRUD collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34928376"
+	},
+	"item": [
+		{
+			"name": "Post correct data (Use twice to see promo code already exist)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCode\": \"12345\",\r\n    \"promoCodeExpirationDate\": \"2025-06-06\",\r\n    \"promoCodeCurrency\": \"EUR\",\r\n    \"promoCodeDiscountAmount\": 10.5,\r\n    \"promoCodeAllowedUsagesNumber\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post incorrect data (Wrong expiration date)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCode\": \"123456\",\r\n    \"promoCodeExpirationDate\": \"2023-06-06\",\r\n    \"promoCodeCurrency\": \"EUR\",\r\n    \"promoCodeDiscountAmount\": 10.5,\r\n    \"promoCodeAllowedUsagesNumber\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post incorrect data (Too short promo code)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCode\": \"12\",\r\n    \"promoCodeExpirationDate\": \"2025-06-06\",\r\n    \"promoCodeCurrency\": \"EUR\",\r\n    \"promoCodeDiscountAmount\": 10.5,\r\n    \"promoCodeAllowedUsagesNumber\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post incorrect data (Too long promo code)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCode\": \"123456789123456789123456789\",\r\n    \"promoCodeExpirationDate\": \"2025-06-06\",\r\n    \"promoCodeCurrency\": \"EUR\",\r\n    \"promoCodeDiscountAmount\": 10.5,\r\n    \"promoCodeAllowedUsagesNumber\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post incorrect data (Promo code contains illegal character)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCode\": \"1234567@\",\r\n    \"promoCodeExpirationDate\": \"2025-06-06\",\r\n    \"promoCodeCurrency\": \"EUR\",\r\n    \"promoCodeDiscountAmount\": 10.5,\r\n    \"promoCodeAllowedUsagesNumber\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post incorrect data (Promo code discount amount is below 0)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCode\": \"1234567\",\r\n    \"promoCodeExpirationDate\": \"2025-06-06\",\r\n    \"promoCodeCurrency\": \"EUR\",\r\n    \"promoCodeDiscountAmount\": -5,\r\n    \"promoCodeAllowedUsagesNumber\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post incorrect data (Promo code allowed usages is below 0)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCode\": \"123456789\",\r\n    \"promoCodeExpirationDate\": \"2025-06-06\",\r\n    \"promoCodeCurrency\": \"EUR\",\r\n    \"promoCodeDiscountAmount\": 5,\r\n    \"promoCodeAllowedUsagesNumber\": -5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get promo code by promo code (promo code exists)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCode\": \"12345\",\r\n    \"promoCodeExpirationDate\": \"2025-06-06\",\r\n    \"promoCodeCurrency\": \"EUR\",\r\n    \"promoCodeDiscountAmount\": 10.5,\r\n    \"promoCodeAllowedUsagesNumber\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode/12345",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode",
+						"12345"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get promo code by promo code (promo code does not exist)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCode\": \"12345\",\r\n    \"promoCodeExpirationDate\": \"2025-06-06\",\r\n    \"promoCodeCurrency\": \"EUR\",\r\n    \"promoCodeDiscountAmount\": 10.5,\r\n    \"promoCodeAllowedUsagesNumber\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode/123457",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode",
+						"123457"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all promo codes (List promo codes)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCode\": \"1234567\",\r\n    \"promoCodeExpirationDate\": \"2025-06-06\",\r\n    \"promoCodeCurrency\": \"EUR\",\r\n    \"promoCodeDiscountAmount\": 10.5,\r\n    \"promoCodeAllowedUsagesNumber\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all promo codes (List promo codes with size = 2)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCode\": \"1234567\",\r\n    \"promoCodeExpirationDate\": \"2025-06-06\",\r\n    \"promoCodeCurrency\": \"EUR\",\r\n    \"promoCodeDiscountAmount\": 10.5,\r\n    \"promoCodeAllowedUsagesNumber\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode?size=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode"
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put promo code by promo code (Promo code exists)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCode\": \"123456789\",\r\n    \"promoCodeExpirationDate\": \"2025-06-06\",\r\n    \"promoCodeCurrency\": \"EUR\",\r\n    \"promoCodeDiscountAmount\": 10.5,\r\n    \"promoCodeAllowedUsagesNumber\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode/12345",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode",
+						"12345"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put promo code by promo code (Promo code does not exist)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCode\": \"123456789\",\r\n    \"promoCodeExpirationDate\": \"2025-06-06\",\r\n    \"promoCodeCurrency\": \"EUR\",\r\n    \"promoCodeDiscountAmount\": 10.5,\r\n    \"promoCodeAllowedUsagesNumber\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode/12345",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode",
+						"12345"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch promo code by promo code (Promo code does not exist)",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCodeCurrency\": \"PLN\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode/12345",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode",
+						"12345"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch promo code by promo code (Promo code exists)",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCodeCurrency\": \"PLN\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode/123456789",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode",
+						"123456789"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete promo code by promo code (Promo code exists)",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCodeCurrency\": \"PLN\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode/123456789",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode",
+						"123456789"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete promo code by promo code (Promo code does not exist)",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"promoCodeCurrency\": \"PLN\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/promoCode/1234",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"promoCode",
+						"1234"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
