@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @RestController
@@ -28,6 +29,13 @@ public class ProductController {
     //TODO: ADD VALIDATION FOR PRODUCTS (for example if passed price is below 0)
     @PostMapping(path = "/product")
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
+        if (isProductPriceBelowZero(productDto.getProductPrice())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Product price is below 0"
+            );
+        }
+
         ProductEntity productEntity = productMapper.mapFrom(productDto);
 
         ProductEntity savedProductEntity = productService.save(productEntity);
@@ -44,7 +52,10 @@ public class ProductController {
 
         return foundProduct.map(ProductEntity -> {
             ProductDto productDto = productMapper.mapTo(ProductEntity);
-            return new ResponseEntity<>(productDto, HttpStatus.OK);
+            return new ResponseEntity<>(
+                    productDto,
+                    HttpStatus.OK
+            );
         }).orElse(
                 new ResponseEntity<>(HttpStatus.NOT_FOUND)
         );
@@ -57,20 +68,29 @@ public class ProductController {
         return allFoundProducts.map(productMapper::mapTo);
     }
 
-    //TODO: Validation as well
-
     @PutMapping(path = "/product/{productId}")
     public ResponseEntity<ProductDto> fullUpdateProduct(
             @PathVariable("productId") Long productId,
             @RequestBody ProductDto productDto
     ) {
 
+        if (isProductPriceBelowZero(productDto.getProductPrice())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Product price is below 0"
+            );
+        }
+
         checkProductExistence(productId);
+
         productDto.setProductId(productId);
         ProductEntity productEntity = productMapper.mapFrom(productDto);
         ProductEntity savedProductEntity = productService.save(productEntity);
 
-        return new ResponseEntity<>(productMapper.mapTo(savedProductEntity), HttpStatus.OK);
+        return new ResponseEntity<>(
+                productMapper.mapTo(savedProductEntity),
+                HttpStatus.OK
+        );
     }
 
     @PatchMapping(path = "/product/{productId}")
@@ -78,12 +98,23 @@ public class ProductController {
             @PathVariable("productId") Long productId,
             @RequestBody ProductDto productDto
     ) {
+
+        if (isProductPriceBelowZero(productDto.getProductPrice())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Product price is below 0"
+            );
+        }
+
         checkProductExistence(productId);
 
         ProductEntity productEntity = productMapper.mapFrom(productDto);
         ProductEntity savedProductEntity = productService.partialUpdate(productId, productEntity);
 
-        return new ResponseEntity<>(productMapper.mapTo(savedProductEntity), HttpStatus.OK);
+        return new ResponseEntity<>(
+                productMapper.mapTo(savedProductEntity),
+                HttpStatus.OK
+        );
     }
 
     @DeleteMapping(path = "/product/{productId}")
@@ -98,5 +129,9 @@ public class ProductController {
         if (productService.findOne(productId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found.");
         }
+    }
+
+    private boolean isProductPriceBelowZero(BigDecimal productPrice) {
+        return productPrice.compareTo(BigDecimal.ZERO) < 0;
     }
 }

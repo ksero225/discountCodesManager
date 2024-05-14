@@ -8,6 +8,7 @@ import com.discountCodesManager.discountCodesManager.mappers.Mapper;
 import com.discountCodesManager.discountCodesManager.services.interfaces.ProductService;
 import com.discountCodesManager.discountCodesManager.services.interfaces.PromoCodeService;
 import com.discountCodesManager.discountCodesManager.services.interfaces.PurchaseService;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -84,29 +85,37 @@ public class PurchaseController {
 
         Integer promoCodeUsages = foundPromoCode.get().getPromoCodeAllowedUsagesNumber();
         foundPromoCode.get().setPromoCodeAllowedUsagesNumber(promoCodeUsages - 1);
-        promoCodeService.updatePromoCode(promoCode, foundPromoCode.get());
+        promoCodeService.updatePromoCode(
+                promoCode,
+                foundPromoCode.get()
+        );
 
-        return new ResponseEntity<>(purchaseMapper.mapTo(savedPurchaseEntity), HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                purchaseMapper.mapTo(savedPurchaseEntity),
+                HttpStatus.CREATED
+        );
     }
 
-    private PurchaseEntity getPurchaseEntity(PromoCodeEntity foundPromoCode, ProductEntity foundProduct) {
+
+    private PurchaseEntity getPurchaseEntity(
+            PromoCodeEntity foundPromoCode,
+            ProductEntity foundProduct
+    ) {
         ProductInformation productInformation = getProductInformation(foundProduct, foundPromoCode);
 
-        PurchaseEntity purchaseEntity = new PurchaseEntity();
-
-        purchaseEntity.setPurchaseDate(today);
-        purchaseEntity.setPurchaseProductBasicPrice(foundPromoCode.getPromoCodeDiscountAmount());
-        purchaseEntity.setPurchaseDiscountApplied(productInformation.getProductPrice());
-        purchaseEntity.setProduct(foundProduct);
-        return purchaseEntity;
+        return PurchaseEntity
+                .builder()
+                .purchaseDate(today)
+                .purchaseProductBasicPrice(foundPromoCode.getPromoCodeDiscountAmount())
+                .purchaseDiscountApplied(productInformation.getProductPrice())
+                .product(foundProduct)
+                .build();
     }
 
-    @Data
     @Getter
-    @Setter
     private class ProductInformation {
-        private String message;
-        private BigDecimal productPrice;
+        private final String message;
+        private final BigDecimal productPrice;
 
         public ProductInformation(String message, BigDecimal productPrice) {
             this.message = message;
@@ -173,65 +182,3 @@ public class PurchaseController {
         }
     }
 }
-
-
-//    private String generateDiscountMessage(ProductEntity productEntity, PromoCodeEntity promoCodeEntity) {
-//        LocalDate today = LocalDate.now();
-//
-//        BigDecimal basePrice = productEntity.getProductPrice();
-//        String productCurrency = productEntity.getProductCurrency();
-//        String promoCodeCurrency = promoCodeEntity.getPromoCodeCurrency();
-//
-//        final Integer promoCodeUsages = promoCodeEntity.getPromoCodeAllowedUsagesNumber();
-//        final String productName = productEntity.getProductName();
-//        final String promoCode = promoCodeEntity.getPromoCode();
-//
-//        String message = "";
-//
-//        if (promoCodeEntity.getPromoCodeExpirationDate().isBefore(today)) {
-//            message = String.format("Promo code is expired, base price is %s %s.",
-//                    basePrice,
-//                    productCurrency
-//            );
-//            return message;
-//        } else if (!productCurrency.equals(promoCodeCurrency)) {
-//            message = String.format("Promo code currency (%s) does not match product currency (%s), base price is %s %s.",
-//                    promoCodeCurrency,
-//                    productCurrency,
-//                    basePrice,
-//                    productCurrency
-//            );
-//            return message;
-//        } else if (promoCodeUsages <= 0) {
-//            message = String.format("The maximum usage limit has been reached for this promo code, base price is %s %s.",
-//                    basePrice,
-//                    productCurrency
-//            );
-//            return message;
-//        } else {
-//            final BigDecimal promoCodeDiscountAmount = promoCodeEntity.getPromoCodeDiscountAmount();
-//            final BigDecimal discountedPrice = basePrice.subtract(promoCodeDiscountAmount);
-//
-//            if (discountedPrice.compareTo(BigDecimal.ZERO) <= 0) {
-//                message = String.format("Price of %s with a promo code %s is 0 %s",
-//                        productName,
-//                        promoCode,
-//                        productCurrency
-//                );
-//
-//                return message;
-//            } else {
-//                message = String.format("Price of %s with a promo code %s is %s %s (original price %s)",
-//                        productName,
-//                        promoCode,
-//                        discountedPrice,
-//                        productCurrency,
-//                        basePrice
-//                );
-//
-//            }
-//        }
-//
-//        return message;
-//    }
-

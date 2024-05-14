@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -26,13 +27,21 @@ public class PromoCodeController {
         this.promoCodeMapper = promoCodeMapper;
     }
 
-    //TODO: ADD VALIDATION FOR PROMO CODE (for example if expiration date is not before today, if price is not below 0, CHECK PROMO CODE ID VALIDATION!)
+    //TODO: ADD VALIDATION FOR PROMO CODE (for example if expiration date is not before today, if price is not below 0)
 
     @PostMapping(path = "/promoCode")
     public ResponseEntity<PromoCodeDto> createPromoCode(@RequestBody PromoCodeDto promoCodeDto) {
         checkPromoCodeValidation(promoCodeDto.getPromoCode());
 
         PromoCodeEntity promoCodeEntity = promoCodeMapper.mapFrom(promoCodeDto);
+
+
+        if(isPromoCodeDiscountAmountBelowZero(promoCodeDto.getPromoCodeDiscountAmount())){
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Promo code discount amount is below 0"
+            );
+        }
 
         if (promoCodeService.existByPromoCode(promoCodeEntity.getPromoCode())) {
             throw new ResponseStatusException(
@@ -41,6 +50,7 @@ public class PromoCodeController {
             );
         }
 
+        //Check if promo code expiration date is before today
         if (promoCodeDto.getPromoCodeExpirationDate().isBefore(LocalDate.now())) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
@@ -61,7 +71,10 @@ public class PromoCodeController {
 
         return foundPromoCode.map(PromoCodeEntity -> {
             PromoCodeDto promoCodeDto = promoCodeMapper.mapTo(PromoCodeEntity);
-            return new ResponseEntity<>(promoCodeDto, HttpStatus.OK);
+            return new ResponseEntity<>(
+                    promoCodeDto,
+                    HttpStatus.OK
+            );
         }).orElse(
                 new ResponseEntity<>(HttpStatus.NOT_FOUND)
         );
@@ -81,6 +94,13 @@ public class PromoCodeController {
 
         checkPromoCodeExistence(promoCode);
 
+        if(isPromoCodeDiscountAmountBelowZero(promoCodeDto.getPromoCodeDiscountAmount())){
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Promo code discount amount is below 0"
+            );
+        }
+
         PromoCodeEntity promoCodeEntity = promoCodeMapper.mapFrom(promoCodeDto);
         PromoCodeEntity savedPromoCodeEntity = promoCodeService.updatePromoCode(promoCode, promoCodeEntity);
 
@@ -95,7 +115,15 @@ public class PromoCodeController {
             @PathVariable("promoCodeId") String promoCode,
             @RequestBody PromoCodeDto promoCodeDto
     ) {
+
         checkPromoCodeExistence(promoCode);
+
+        if(isPromoCodeDiscountAmountBelowZero(promoCodeDto.getPromoCodeDiscountAmount())){
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Promo code discount amount is below 0"
+            );
+        }
 
         PromoCodeEntity promoCodeEntity = promoCodeMapper.mapFrom(promoCodeDto);
         PromoCodeEntity savedPromoCodeentity = promoCodeService.updatePromoCode(promoCode, promoCodeEntity);
@@ -136,6 +164,10 @@ public class PromoCodeController {
                     "Invalid promo code"
             );
         }
+    }
+
+    private boolean isPromoCodeDiscountAmountBelowZero(BigDecimal productPrice) {
+        return productPrice.compareTo(BigDecimal.ZERO) < 0;
     }
 
 }
