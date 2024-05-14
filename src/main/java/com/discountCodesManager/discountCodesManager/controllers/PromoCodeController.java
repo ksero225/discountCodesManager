@@ -31,30 +31,14 @@ public class PromoCodeController {
 
     @PostMapping(path = "/promoCode")
     public ResponseEntity<PromoCodeDto> createPromoCode(@RequestBody PromoCodeDto promoCodeDto) {
-        checkPromoCodeValidation(promoCodeDto.getPromoCode());
+        checkPromoCodeDtoValidation(promoCodeDto);
 
         PromoCodeEntity promoCodeEntity = promoCodeMapper.mapFrom(promoCodeDto);
-
-
-        if(isPromoCodeDiscountAmountBelowZero(promoCodeDto.getPromoCodeDiscountAmount())){
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Promo code discount amount is below 0"
-            );
-        }
 
         if (promoCodeService.existByPromoCode(promoCodeEntity.getPromoCode())) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "Promo code already exist"
-            );
-        }
-
-        //Check if promo code expiration date is before today
-        if (promoCodeDto.getPromoCodeExpirationDate().isBefore(LocalDate.now())) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Wrong expiration date"
             );
         }
 
@@ -91,23 +75,7 @@ public class PromoCodeController {
             @PathVariable("promoCode") String promoCode,
             @RequestBody PromoCodeDto promoCodeDto
     ) {
-
-        checkPromoCodeExistence(promoCode);
-
-        if(isPromoCodeDiscountAmountBelowZero(promoCodeDto.getPromoCodeDiscountAmount())){
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Promo code discount amount is below 0"
-            );
-        }
-
-        PromoCodeEntity promoCodeEntity = promoCodeMapper.mapFrom(promoCodeDto);
-        PromoCodeEntity savedPromoCodeEntity = promoCodeService.updatePromoCode(promoCode, promoCodeEntity);
-
-        return new ResponseEntity<>(
-                promoCodeMapper.mapTo(savedPromoCodeEntity),
-                HttpStatus.OK
-        );
+        return getPromoCodeDtoResponseEntity(promoCode, promoCodeDto);
     }
 
     @PatchMapping(path = "/promoCode/{promoCodeId}")
@@ -115,15 +83,18 @@ public class PromoCodeController {
             @PathVariable("promoCodeId") String promoCode,
             @RequestBody PromoCodeDto promoCodeDto
     ) {
+        return getPromoCodeDtoResponseEntity(promoCode, promoCodeDto);
+    }
 
+    private ResponseEntity<PromoCodeDto> getPromoCodeDtoResponseEntity(
+            @PathVariable("promoCodeId") String promoCode,
+            @RequestBody PromoCodeDto promoCodeDto
+    ) {
         checkPromoCodeExistence(promoCode);
 
-        if(isPromoCodeDiscountAmountBelowZero(promoCodeDto.getPromoCodeDiscountAmount())){
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Promo code discount amount is below 0"
-            );
-        }
+        //If and only if promo code discount amount is present, check if it's below 0
+        Optional<BigDecimal> promoCodeDiscountAmount = Optional.ofNullable(promoCodeDto.getPromoCodeDiscountAmount());
+        promoCodeDiscountAmount.ifPresent(this::isPromoCodeDiscountAmountBelowZero);
 
         PromoCodeEntity promoCodeEntity = promoCodeMapper.mapFrom(promoCodeDto);
         PromoCodeEntity savedPromoCodeentity = promoCodeService.updatePromoCode(promoCode, promoCodeEntity);
@@ -151,12 +122,12 @@ public class PromoCodeController {
         }
     }
 
-    private void checkPromoCodeValidation(String promoCode) {
+    private void checkPromoCodeDtoValidation(PromoCodeDto promoCodeDto) {
 
         final String regexPattern = "^[a-zA-Z0-9]{3,24}$";
 
         final Pattern pattern = Pattern.compile(regexPattern);
-        final Matcher matcher = pattern.matcher(promoCode);
+        final Matcher matcher = pattern.matcher(promoCodeDto.getPromoCode());
 
         if (!matcher.matches()) {
             throw new ResponseStatusException(
@@ -164,10 +135,32 @@ public class PromoCodeController {
                     "Invalid promo code"
             );
         }
+
+        isPromoCodeDiscountAmountBelowZero(promoCodeDto.getPromoCodeDiscountAmount());
+
+        //Check if promo code expiration date is before today
+        if (promoCodeDto.getPromoCodeExpirationDate().isBefore(LocalDate.now())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Wrong expiration date"
+            );
+        }
+
+        if (promoCodeDto.getPromoCodeAllowedUsagesNumber() <= 0){
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Promo code allowed usages is below or equal to 0"
+            );
+        }
     }
 
-    private boolean isPromoCodeDiscountAmountBelowZero(BigDecimal productPrice) {
-        return productPrice.compareTo(BigDecimal.ZERO) < 0;
+    private void isPromoCodeDiscountAmountBelowZero(BigDecimal productPrice) {
+        if(productPrice.compareTo(BigDecimal.ZERO) < 0){
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Promo code discount amount is below 0"
+            );
+        }
     }
 
 }

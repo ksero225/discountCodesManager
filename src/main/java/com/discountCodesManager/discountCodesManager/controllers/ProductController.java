@@ -99,12 +99,17 @@ public class ProductController {
             @RequestBody ProductDto productDto
     ) {
 
-        if (isProductPriceBelowZero(productDto.getProductPrice())) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Product price is below 0"
-            );
+        Optional<BigDecimal> productDtoPrice = Optional.ofNullable(productDto.getProductPrice());
+
+        if(productDtoPrice.isPresent()){
+            if (isProductPriceBelowZero(productDtoPrice.get())) {
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "Product price is below 0"
+                );
+            }
         }
+
 
         checkProductExistence(productId);
 
