@@ -19,5 +19,4 @@ public interface ProductService {
 
     void deleteById(Long productId);
 
-    Optional<ProductEntity> findOneByProductName(String productName);
 }
