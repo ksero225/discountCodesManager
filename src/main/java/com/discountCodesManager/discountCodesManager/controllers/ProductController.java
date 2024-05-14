@@ -25,8 +25,6 @@ public class ProductController {
         this.productMapper = productMapper;
     }
 
-
-    //TODO: ADD VALIDATION FOR PRODUCTS (for example if passed price is below 0)
     @PostMapping(path = "/product")
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
         if (isProductPriceBelowZero(productDto.getProductPrice())) {
@@ -76,7 +74,7 @@ public class ProductController {
 
         if (isProductPriceBelowZero(productDto.getProductPrice())) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
+                    HttpStatus.BAD_REQUEST,
                     "Product price is below 0"
             );
         }
@@ -104,7 +102,7 @@ public class ProductController {
         if(productDtoPrice.isPresent()){
             if (isProductPriceBelowZero(productDtoPrice.get())) {
                 throw new ResponseStatusException(
-                        HttpStatus.CONFLICT,
+                        HttpStatus.BAD_REQUEST,
                         "Product price is below 0"
                 );
             }

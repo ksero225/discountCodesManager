@@ -64,7 +64,7 @@ public class PromoCodeControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(testPromoCodeDtoJson)
         ).andExpect(
-                MockMvcResultMatchers.status().isConflict()
+                MockMvcResultMatchers.status().isBadRequest()
         );
     }
 
@@ -82,7 +82,7 @@ public class PromoCodeControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(testPromoCodeDtoJson)
         ).andExpect(
-                MockMvcResultMatchers.status().isConflict()
+                MockMvcResultMatchers.status().isBadRequest()
         );
     }
 
@@ -98,7 +98,7 @@ public class PromoCodeControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(testPromoCodeDtoJson)
         ).andExpect(
-                MockMvcResultMatchers.status().isConflict()
+                MockMvcResultMatchers.status().isBadRequest()
         );
     }
 

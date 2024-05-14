@@ -27,7 +27,6 @@ public class PromoCodeController {
         this.promoCodeMapper = promoCodeMapper;
     }
 
-    //TODO: ADD VALIDATION FOR PROMO CODE (for example if expiration date is not before today, if price is not below 0)
 
     @PostMapping(path = "/promoCode")
     public ResponseEntity<PromoCodeDto> createPromoCode(@RequestBody PromoCodeDto promoCodeDto) {
@@ -37,7 +36,7 @@ public class PromoCodeController {
 
         if (promoCodeService.existByPromoCode(promoCodeEntity.getPromoCode())) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
+                    HttpStatus.BAD_REQUEST,
                     "Promo code already exist"
             );
         }
@@ -131,7 +130,7 @@ public class PromoCodeController {
 
         if (!matcher.matches()) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
+                    HttpStatus.BAD_REQUEST,
                     "Invalid promo code"
             );
         }
@@ -141,14 +140,14 @@ public class PromoCodeController {
         //Check if promo code expiration date is before today
         if (promoCodeDto.getPromoCodeExpirationDate().isBefore(LocalDate.now())) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
+                    HttpStatus.BAD_REQUEST,
                     "Wrong expiration date"
             );
         }
 
         if (promoCodeDto.getPromoCodeAllowedUsagesNumber() <= 0){
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
+                    HttpStatus.BAD_REQUEST,
                     "Promo code allowed usages is below or equal to 0"
             );
         }
@@ -157,7 +156,7 @@ public class PromoCodeController {
     private void isPromoCodeDiscountAmountBelowZero(BigDecimal productPrice) {
         if(productPrice.compareTo(BigDecimal.ZERO) < 0){
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
+                    HttpStatus.BAD_REQUEST,
                     "Promo code discount amount is below 0"
             );
         }

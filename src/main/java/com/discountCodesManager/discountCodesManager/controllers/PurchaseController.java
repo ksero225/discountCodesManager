@@ -51,9 +51,15 @@ public class PurchaseController {
         Optional<PromoCodeEntity> foundPromoCode = promoCodeService.findOne(promoCode);
 
         if (foundPromoCode.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Promo code does not exist");
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Promo code does not exist"
+            );
         } else if (foundProduct.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product does not exist");
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Product does not exist"
+            );
         }
 
         ProductInformation productInformation = getProductInformation(foundProduct.get(), foundPromoCode.get());
@@ -71,9 +77,15 @@ public class PurchaseController {
         Optional<PromoCodeEntity> foundPromoCode = promoCodeService.findOne(promoCode);
 
         if (foundPromoCode.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Promo code does not exist");
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Promo code does not exist"
+            );
         } else if (foundProduct.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product does not exist");
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Product does not exist"
+            );
         }
 
         PurchaseEntity purchaseEntity = getPurchaseEntity(foundPromoCode.get(), foundProduct.get());
@@ -122,17 +134,17 @@ public class PurchaseController {
 
     private ProductInformation getProductInformation(ProductEntity productEntity, PromoCodeEntity promoCodeEntity) {
 
-        BigDecimal basePrice = productEntity.getProductPrice();
-        String productCurrency = productEntity.getProductCurrency();
-        String promoCodeCurrency = promoCodeEntity.getPromoCodeCurrency();
+        final BigDecimal basePrice = productEntity.getProductPrice();
+        final String productCurrency = productEntity.getProductCurrency();
+        final String promoCodeCurrency = promoCodeEntity.getPromoCodeCurrency();
 
         final Integer promoCodeUsages = promoCodeEntity.getPromoCodeAllowedUsagesNumber();
         final String productName = productEntity.getProductName();
         final String promoCode = promoCodeEntity.getPromoCode();
-        String message;
+
 
         if (promoCodeEntity.getPromoCodeExpirationDate().isBefore(today)) {
-            message = String.format("Promo code is expired, base price is %s %s.",
+            final String message = String.format("Promo code is expired, base price is %s %s.",
                     basePrice,
                     productCurrency
             );
@@ -140,7 +152,7 @@ public class PurchaseController {
             return new ProductInformation(message, basePrice);
         }
         if (!productCurrency.equals(promoCodeCurrency)) {
-            message = String.format("Promo code currency (%s) does not match product currency (%s), base price is %s %s.",
+            final String message = String.format("Promo code currency (%s) does not match product currency (%s), base price is %s %s.",
                     promoCodeCurrency,
                     productCurrency,
                     basePrice,
@@ -149,7 +161,7 @@ public class PurchaseController {
             return new ProductInformation(message, basePrice);
         }
         if (promoCodeUsages <= 0) {
-            message = String.format("The maximum usage limit has been reached for this promo code, base price is %s %s.",
+            final String message = String.format("The maximum usage limit has been reached for this promo code, base price is %s %s.",
                     basePrice,
                     productCurrency
             );
@@ -160,7 +172,7 @@ public class PurchaseController {
         final BigDecimal discountedPrice = basePrice.subtract(promoCodeDiscountAmount);
 
         if (discountedPrice.compareTo(BigDecimal.ZERO) <= 0) {
-            message = String.format("Price of %s with a promo code %s is 0 %s",
+            final String message = String.format("Price of %s with a promo code %s is 0 %s",
                     productName,
                     promoCode,
                     productCurrency
@@ -168,7 +180,7 @@ public class PurchaseController {
 
             return new ProductInformation(message, BigDecimal.ZERO);
         } else {
-            message = String.format("Price of %s with a promo code %s is %s %s (original price %s)",
+            final String message = String.format("Price of %s with a promo code %s is %s %s (original price %s)",
                     productName,
                     promoCode,
                     discountedPrice,
