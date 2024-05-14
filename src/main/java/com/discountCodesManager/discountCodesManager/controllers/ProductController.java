@@ -48,15 +48,16 @@ public class ProductController {
     public ResponseEntity<ProductDto> getOneProductById(@PathVariable("productId") Long productId) {
         Optional<ProductEntity> foundProduct = productService.findOne(productId);
 
-        return foundProduct.map(ProductEntity -> {
-            ProductDto productDto = productMapper.mapTo(ProductEntity);
+        if (foundProduct.isPresent()){
+            ProductDto productDto = productMapper.mapTo(foundProduct.get());
             return new ResponseEntity<>(
                     productDto,
                     HttpStatus.OK
             );
-        }).orElse(
-                new ResponseEntity<>(HttpStatus.NOT_FOUND)
-        );
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
     }
 
     @GetMapping(path = "/product")
