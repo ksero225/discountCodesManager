@@ -13,7 +13,6 @@ public interface PromoCodeService {
 
     PromoCodeEntity updatePromoCode(String promoCodeId, PromoCodeEntity promoCodeEntity);
 
-
     void deleteByPromoCode(String promoCode);
 
     boolean existByPromoCode(String promoCode);

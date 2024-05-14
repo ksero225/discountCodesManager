@@ -1,6 +1,5 @@
 package com.discountCodesManager.discountCodesManager.domain.dto;
 
-import com.discountCodesManager.discountCodesManager.domain.entities.ProductEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
