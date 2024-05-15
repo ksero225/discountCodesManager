@@ -23,6 +23,7 @@ public class PurchaseEntity {
     private LocalDate purchaseDate;
     private BigDecimal purchaseProductBasicPrice;
     private BigDecimal purchaseDiscountApplied;
+    private BigDecimal purchaseFinalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")

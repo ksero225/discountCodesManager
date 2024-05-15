@@ -92,12 +92,15 @@ public class PurchaseController {
 
         PurchaseEntity savedPurchaseEntity = purchaseService.save(purchaseEntity);
 
+
         Integer promoCodeUsages = foundPromoCode.get().getPromoCodeAllowedUsagesNumber();
-        foundPromoCode.get().setPromoCodeAllowedUsagesNumber(promoCodeUsages - 1);
-        promoCodeService.updatePromoCode(
-                promoCode,
-                foundPromoCode.get()
-        );
+        if (promoCodeUsages >= 1){
+            foundPromoCode.get().setPromoCodeAllowedUsagesNumber(promoCodeUsages - 1);
+            promoCodeService.updatePromoCode(
+                    promoCode,
+                    foundPromoCode.get()
+            );
+        }
 
         return new ResponseEntity<>(
                 purchaseMapper.mapTo(savedPurchaseEntity),
@@ -115,8 +118,9 @@ public class PurchaseController {
         return PurchaseEntity
                 .builder()
                 .purchaseDate(today)
-                .purchaseProductBasicPrice(foundPromoCode.getPromoCodeDiscountAmount())
-                .purchaseDiscountApplied(productInformation.getProductPrice())
+                .purchaseProductBasicPrice(foundProduct.getProductPrice())
+                .purchaseDiscountApplied(foundPromoCode.getPromoCodeDiscountAmount())
+                .purchaseFinalPrice(productInformation.productDiscountApplied)
                 .product(foundProduct)
                 .build();
     }
@@ -125,10 +129,12 @@ public class PurchaseController {
     private class ProductInformation {
         private final String message;
         private final BigDecimal productPrice;
+        private final BigDecimal productDiscountApplied;
 
-        public ProductInformation(String message, BigDecimal productPrice) {
+        public ProductInformation(String message, BigDecimal productPrice, BigDecimal productDiscountApplied) {
             this.message = message;
             this.productPrice = productPrice;
+            this.productDiscountApplied = productDiscountApplied;
         }
     }
 
@@ -149,7 +155,7 @@ public class PurchaseController {
                     productCurrency
             );
 
-            return new ProductInformation(message, basePrice);
+            return new ProductInformation(message, basePrice, basePrice);
         }
         if (!productCurrency.equals(promoCodeCurrency)) {
             final String message = String.format("Promo code currency (%s) does not match product currency (%s), base price is %s %s.",
@@ -158,14 +164,14 @@ public class PurchaseController {
                     basePrice,
                     productCurrency
             );
-            return new ProductInformation(message, basePrice);
+            return new ProductInformation(message, basePrice, basePrice);
         }
         if (promoCodeUsages <= 0) {
             final String message = String.format("The maximum usage limit has been reached for this promo code, base price is %s %s.",
                     basePrice,
                     productCurrency
             );
-            return new ProductInformation(message, basePrice);
+            return new ProductInformation(message, basePrice, basePrice);
         }
 
         final BigDecimal promoCodeDiscountAmount = promoCodeEntity.getPromoCodeDiscountAmount();
@@ -178,7 +184,7 @@ public class PurchaseController {
                     productCurrency
             );
 
-            return new ProductInformation(message, BigDecimal.ZERO);
+            return new ProductInformation(message, BigDecimal.ZERO, discountedPrice);
         } else {
             final String message = String.format("Price of %s with a promo code %s is %s %s (original price %s)",
                     productName,
@@ -187,7 +193,7 @@ public class PurchaseController {
                     productCurrency,
                     basePrice
             );
-            return new ProductInformation(message, discountedPrice);
+            return new ProductInformation(message, promoCodeDiscountAmount, discountedPrice);
         }
     }
 }

@@ -19,6 +19,7 @@ public class PurchaseDto {
     private LocalDate purchaseDate;
     private BigDecimal purchaseProductBasicPrice;
     private BigDecimal purchaseDiscountApplied;
+    private BigDecimal purchaseFinalPrice;
 
     private ProductEntity product;
 }
