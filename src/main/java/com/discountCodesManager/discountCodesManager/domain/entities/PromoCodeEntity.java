@@ -20,7 +20,6 @@ public class PromoCodeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long promoCodeId;// 3-24 alphanumeric case-sensitive characters with no whitespaces
 
-    @Column(name = "promoCode")
     private String promoCode;
 
     private LocalDate promoCodeExpirationDate;

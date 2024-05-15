@@ -43,11 +43,11 @@ public class PurchaseController {
 
     @GetMapping(path = "/discount/{productId}")
     public ResponseEntity<String> getDiscountPrice(
-            @PathVariable("productId") Long productNameId,
+            @PathVariable("productId") Long productId,
             @RequestParam("promoCode") String promoCode
     ) {
 
-        Optional<ProductEntity> foundProduct = productService.findOne(productNameId);
+        Optional<ProductEntity> foundProduct = productService.findOne(productId);
         Optional<PromoCodeEntity> foundPromoCode = promoCodeService.findOne(promoCode);
 
         if (foundPromoCode.isEmpty()) {
