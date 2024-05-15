@@ -5,8 +5,6 @@ import com.discountCodesManager.discountCodesManager.domain.entities.ProductEnti
 import com.discountCodesManager.discountCodesManager.domain.entities.PromoCodeEntity;
 import com.discountCodesManager.discountCodesManager.services.interfaces.ProductService;
 import com.discountCodesManager.discountCodesManager.services.interfaces.PromoCodeService;
-import com.discountCodesManager.discountCodesManager.services.interfaces.PurchaseService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +22,15 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
 public class PurchaseControllerTests {
-    private final PurchaseService purchaseService;
     private final ProductService productService;
     private final PromoCodeService promoCodeService;
-    private final ObjectMapper objectMapper;
+
     private final MockMvc mockMvc;
 
     @Autowired
-    public PurchaseControllerTests(PurchaseService purchaseService, ProductService productService, PromoCodeService promoCodeService, ObjectMapper objectMapper, MockMvc mockMvc) {
-        this.purchaseService = purchaseService;
+    public PurchaseControllerTests(ProductService productService, PromoCodeService promoCodeService, MockMvc mockMvc) {
         this.productService = productService;
         this.promoCodeService = promoCodeService;
-        this.objectMapper = objectMapper;
         this.mockMvc = mockMvc;
     }
 
